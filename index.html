@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>調理師試験 模擬問題</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* モード選択画面 */
+        .mode-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mode-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.15s, box-shadow 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mode-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .mode-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .mode-icon.exam { background: #e8f5e9; }
+        .mode-icon.random { background: #e3f2fd; }
+        .mode-icon.weak { background: #fce4ec; }
+
+        .mode-info h3 {
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .mode-info p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .weak-count {
+            background: #ff5252;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        /* 問題画面 */
+        .quiz-screen {
+            display: none;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-btn:active {
+            background: #eee;
+        }
+
+        .progress-info {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .choice-btn:active {
+            background: #e9ecef;
+        }
+
+        .choice-btn.selected {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .choice-btn.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .choice-btn.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .choice-btn.show-correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .choice-btn:disabled {
+            cursor: default;
+        }
+
+        /* 解説 */
+        .explanation {
+            display: none;
+            background: #fffde7;
+            border: 1px solid #fff9c4;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .explanation h4 {
+            font-size: 0.85rem;
+            color: #f57f17;
+            margin-bottom: 8px;
+        }
+
+        .explanation p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ボタン */
+        .next-btn {
+            display: none;
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .next-btn:active {
+            opacity: 0.9;
+        }
+
+        /* 結果画面 */
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 16px 0;
+        }
+
+        .result-score span {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .result-detail {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .result-pass {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .result-pass.pass {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-pass.fail {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .result-category {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .result-category h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .category-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+        }
+
+        .category-result-item .bar-wrapper {
+            width: 100px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+
+        .category-result-item .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s;
+        }
+
+        .retry-btn, .home-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .home-btn {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* 統計 */
+        .stats-section {
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stats-section h3 {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .reset-btn {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: #ffebee;
+            color: #c62828;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 問題数選択モーダル */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 340px;
+        }
+
+        .modal h3 {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-option {
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1rem;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .modal-option:active {
+            background: #f0f0ff;
+            border-color: #667eea;
+        }
+
+        .modal-cancel {
+            margin-top: 12px;
+            padding: 12px;
+            width: 100%;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ホーム画面 -->
+        <div id="home-screen">
+            <div class="header">
+                <h1>調理師試験 模擬問題</h1>
+                <p>合格に向けて頑張りましょう！</p>
+            </div>
+
+            <div class="mode-selection">
+                <button class="mode-btn" onclick="startExamMode()">
+                    <div class="mode-icon exam">📝</div>
+                    <div class="mode-info">
+                        <h3>模擬試験モード</h3>
+                        <p>本番と同じ60問・カテゴリ配分で出題</p>
+                    </div>
+                </button>
+
+                <button class="mode-btn" onclick="showRandomModal()">
+                    <div class="mode-icon random">🎲</div>
+                    <div class="mode-info">
+                        <h3>ランダムモード</h3>
+                        <p>全カテゴリからランダムに出題</p>
+                    </div>
+                </button>
+
+                <button class="mode-btn" onclick="startWeakMode()">
+                    <div class="mode-icon weak">💪</div>
+                    <div class="mode-info">
+                        <h3>苦手克服モード</h3>
+                        <p>間違えた問題を重点的に復習<span class="weak-count" id="weak-count">0</span></p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- 学習統計 -->
+            <div class="stats-section">
+                <h3>📊 学習記録</h3>
+                <div class="stat-row">
+                    <span>総解答数</span>
+                    <span id="stat-total">0</span>
+                </div>
+                <div class="stat-row">
+                    <span>正解率</span>
+                    <span id="stat-rate">-%</span>
+                </div>
+                <div class="stat-row">
+                    <span>模擬試験回数</span>
+                    <span id="stat-exams">0</span>
+                </div>
+                <button class="reset-btn" onclick="resetStats()">学習記録をリセット</button>
+            </div>
+        </div>
+
+        <!-- 問題画面 -->
+        <div id="quiz-screen" class="quiz-screen">
+            <div class="quiz-header">
+                <button class="back-btn" onclick="goHome()">←</button>
+                <div class="progress-info" id="progress-info">1 / 10</div>
+            </div>
+            <span class="category-badge" id="category-badge">食品衛生学</span>
+            <div class="question-card">
+                <p class="question-text" id="question-text"></p>
+                <div class="choices" id="choices"></div>
+                <div class="explanation" id="explanation">
+                    <h4>💡 解説</h4>
+                    <p id="explanation-text"></p>
+                </div>
+            </div>
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題</button>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="result-screen" class="result-screen">
+            <div class="result-card">
+                <h2>試験結果</h2>
+                <div class="result-score" id="result-score">0<span> / 60</span></div>
+                <div class="result-detail" id="result-detail">正解率: 0%</div>
+                <div class="result-pass" id="result-pass">合格</div>
+
+                <div class="result-category">
+                    <h4>カテゴリ別結果</h4>
+                    <div id="category-results"></div>
+                </div>
+            </div>
+            <button class="retry-btn" onclick="retryMode()">もう一度挑戦</button>
+            <button class="home-btn" onclick="goHome()">ホームに戻る</button>
+        </div>
+    </div>
+
+    <!-- 問題数選択モーダル -->
+    <div class="modal-overlay" id="random-modal">
+        <div class="modal">
+            <h3>問題数を選択</h3>
+            <div class="modal-options">
+                <div class="modal-option" onclick="startRandomMode(10)">10問</div>
+                <div class="modal-option" onclick="startRandomMode(20)">20問</div>
+                <div class="modal-option" onclick="startRandomMode(30)">30問</div>
+                <div class="modal-option" onclick="startRandomMode(0)">全問</div>
+            </div>
+            <button class="modal-cancel" onclick="closeModal()">キャンセル</button>
+        </div>
+    </div>
+
+    <script>
+    // ==========================================
+    // 問題データ
+    // ==========================================
+    const questions = [
+        // ===== 食品衛生学 (25%) =====
+        {
+            category: "食品衛生学",
+            question: "食中毒の原因菌のうち、芽胞を形成するものはどれか。",
+            choices: ["腸炎ビブリオ", "黄色ブドウ球菌", "ウェルシュ菌", "カンピロバクター"],
+            answer: 2,
+            explanation: "ウェルシュ菌は芽胞を形成する嫌気性菌で、加熱調理後の食品が徐々に冷却される過程で増殖しやすい。大量調理施設での食中毒の原因となることが多い。"
+        },
+        {
+            category: "食品衛生学",
+            question: "ノロウイルスに関する記述で正しいものはどれか。",
+            choices: ["細菌性食中毒に分類される", "85～90℃で90秒以上の加熱が有効である", "アルコール消毒が最も有効である", "夏季に最も発生が多い"],
+            answer: 1,
+            explanation: "ノロウイルスはウイルス性食中毒の原因で、85～90℃で90秒以上の加熱が有効。次亜塩素酸ナトリウムによる消毒も効果的。冬季に多発する。"
+        },
+        {
+            category: "食品衛生学",
+            question: "腸炎ビブリオに関する記述で正しいものはどれか。",
+            choices: ["真水中で増殖しやすい", "3%前後の食塩濃度で増殖する", "低温でも急速に増殖する", "芽胞を形成する"],
+            answer: 1,
+            explanation: "腸炎ビブリオは好塩菌で、3%前後の食塩濃度（海水程度）でよく増殖する。真水や低温では増殖しにくく、魚介類の生食が主な感染源。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品添加物の表示が免除されるものはどれか。",
+            choices: ["保存料", "着色料", "加工助剤", "甘味料"],
+            answer: 2,
+            explanation: "加工助剤は食品の加工中に使用されるが、最終食品に残存しないか微量のため、表示が免除される。キャリーオーバーも同様に免除される場合がある。"
+        },
+        {
+            category: "食品衛生学",
+            question: "HACCPに関する記述で正しいものはどれか。",
+            choices: ["最終製品の検査を重視するシステムである", "重要管理点（CCP）を設定して管理する", "小規模事業者には適用されない", "日本独自の衛生管理手法である"],
+            answer: 1,
+            explanation: "HACCP（危害分析重要管理点）は、製造工程全体の中で重要管理点（CCP）を設定し、継続的に監視・記録する予防的な衛生管理システム。2021年から全食品事業者に義務化。"
+        },
+        {
+            category: "食品衛生学",
+            question: "黄色ブドウ球菌の食中毒に関する記述で正しいものはどれか。",
+            choices: ["毒素は加熱により容易に分解される", "潜伏期間は通常1～5時間と短い", "感染型食中毒に分類される", "食品中で増殖しても毒素は産生しない"],
+            answer: 1,
+            explanation: "黄色ブドウ球菌食中毒は毒素型で、潜伏期間が1～5時間と短い。産生されるエンテロトキシンは耐熱性があり、通常の加熱では分解されない。"
+        },
+        {
+            category: "食品衛生学",
+            question: "サルモネラ菌に関する記述で正しいものはどれか。",
+            choices: ["ヒトの皮膚に常在する", "鶏卵が主な感染源の一つである", "嫌気性菌である", "毒素型食中毒を起こす"],
+            answer: 1,
+            explanation: "サルモネラ菌は鶏卵や食肉が主な感染源。感染型食中毒を起こし、十分な加熱（75℃1分以上）で予防できる。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品の保存方法とその原理の組み合わせで正しいものはどれか。",
+            choices: ["塩蔵 ー 水分活性の低下", "冷凍 ー pHの低下", "燻製 ー 酸素濃度の上昇", "缶詰 ー 水分活性の上昇"],
+            answer: 0,
+            explanation: "塩蔵は食塩により食品の水分活性を低下させ、微生物の増殖を抑制する保存法。冷凍は低温による微生物活動の抑制、燻製は殺菌・乾燥効果による。"
+        },
+        {
+            category: "食品衛生学",
+            question: "アニサキスに関する記述で正しいものはどれか。",
+            choices: ["加熱や冷凍では死滅しない", "淡水魚に多く寄生する", "酢や醤油で死滅する", "-20℃で24時間以上の冷凍で死滅する"],
+            answer: 3,
+            explanation: "アニサキスは-20℃で24時間以上の冷凍、または70℃以上の加熱で死滅する。海産魚介類に寄生し、酢や醤油では死滅しない。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品衛生法に基づく営業許可が必要な業種はどれか。",
+            choices: ["野菜の露地販売", "飲食店営業", "農産物の直売", "米の販売"],
+            answer: 1,
+            explanation: "飲食店営業は食品衛生法に基づく営業許可が必要。都道府県知事の許可を受け、施設基準を満たす必要がある。"
+        },
+        {
+            category: "食品衛生学",
+            question: "消毒に関する記述で正しいものはどれか。",
+            choices: ["逆性石けんはノロウイルスに有効である", "次亜塩素酸ナトリウムは金属の腐食を起こさない", "エタノールは芽胞に有効である", "次亜塩素酸ナトリウムはノロウイルスに有効である"],
+            answer: 3,
+            explanation: "次亜塩素酸ナトリウム（200ppm以上）はノロウイルスに有効。アルコールや逆性石けんはノロウイルスには効果が不十分。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品中の残留農薬に関するポジティブリスト制度について正しいものはどれか。",
+            choices: ["基準が設定されていない農薬は使用制限がない", "一律基準は0.01ppmである", "輸入食品には適用されない", "天然由来の農薬は対象外である"],
+            answer: 1,
+            explanation: "ポジティブリスト制度では、基準が設定されていない農薬等は一律基準（0.01ppm）を超えて残留する食品の販売等が禁止される。"
+        },
+        {
+            category: "食品衛生学",
+            question: "カンピロバクターによる食中毒に関する記述で正しいものはどれか。",
+            choices: ["潜伏期間は1～2時間である", "鶏肉が主な原因食品である", "100個以上の菌量で発症する", "毒素型食中毒である"],
+            answer: 1,
+            explanation: "カンピロバクターは鶏肉が主な感染源で、少量の菌（数百個程度）でも感染する。潜伏期間は2～5日と比較的長い感染型食中毒。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品の期限表示に関する記述で正しいものはどれか。",
+            choices: ["消費期限は品質が保持される期限を示す", "賞味期限を過ぎた食品は直ちに廃棄すべきである", "消費期限は概ね5日以内に劣化する食品に表示する", "すべての食品に賞味期限の表示が義務付けられている"],
+            answer: 2,
+            explanation: "消費期限は概ね5日以内に品質が劣化する食品（弁当、サンドイッチ等）に表示され、期限内に消費すべき。賞味期限は比較的日持ちする食品に表示。"
+        },
+        {
+            category: "食品衛生学",
+            question: "食品取扱者の衛生管理として適切でないものはどれか。",
+            choices: ["手指に傷がある場合は耐水性絆創膏と手袋を使用する", "定期的な検便を実施する", "下痢症状がある場合でも軽度なら調理に従事できる", "作業前に十分な手洗いを行う"],
+            answer: 2,
+            explanation: "下痢・嘔吐等の症状がある場合は、軽度であっても食品の取扱いに従事してはならない。食中毒菌を保有している可能性があるため。"
+        },
+
+        // ===== 公衆衛生学 (15%) =====
+        {
+            category: "公衆衛生学",
+            question: "日本の人口動態統計における死因の第1位（2023年）はどれか。",
+            choices: ["心疾患", "悪性新生物（がん）", "脳血管疾患", "肺炎"],
+            answer: 1,
+            explanation: "日本人の死因第1位は悪性新生物（がん）で、1981年以降首位を占めている。第2位は心疾患、第3位は老衰となっている。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "感染症の予防及び感染症の患者に対する医療に関する法律（感染症法）で、1類感染症に分類されるものはどれか。",
+            choices: ["結核", "エボラ出血熱", "コレラ", "インフルエンザ"],
+            answer: 1,
+            explanation: "エボラ出血熱は1類感染症に分類される。1類感染症は感染力・重篤性が極めて高い感染症で、ペスト、ラッサ熱なども含まれる。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "生活習慣病に該当しないものはどれか。",
+            choices: ["糖尿病", "高血圧症", "麻疹", "脂質異常症"],
+            answer: 2,
+            explanation: "麻疹（はしか）はウイルスによる感染症であり、生活習慣病ではない。糖尿病、高血圧症、脂質異常症は食習慣・運動習慣等が関与する生活習慣病。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "上水道の浄水処理で用いられる消毒法として正しいものはどれか。",
+            choices: ["紫外線照射", "塩素消毒", "オゾン消毒のみ", "煮沸消毒"],
+            answer: 1,
+            explanation: "日本の上水道では塩素消毒が法定の消毒法。給水栓で遊離残留塩素0.1mg/L以上を保持することが水道法で定められている。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "労働安全衛生法に基づく健康診断に関する記述で正しいものはどれか。",
+            choices: ["パートタイム労働者は対象外である", "事業者は労働者に対し年1回の定期健康診断を実施する義務がある", "健康診断の費用は労働者が負担する", "50人未満の事業場には実施義務がない"],
+            answer: 1,
+            explanation: "事業者は常時使用する労働者に対して、年1回の定期健康診断を実施する義務がある（労働安全衛生法第66条）。費用は事業者負担。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "環境衛生に関する記述で正しいものはどれか。",
+            choices: ["二酸化炭素は室内空気の汚染指標として用いられる", "一酸化炭素は無臭で無害である", "湿度は健康に影響しない", "換気は冬季には不要である"],
+            answer: 0,
+            explanation: "二酸化炭素（CO₂）濃度は室内空気の汚染度を示す指標として使われ、建築物環境衛生管理基準では1000ppm以下が望ましいとされる。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "健康増進法に基づく取り組みとして正しいものはどれか。",
+            choices: ["医薬品の製造管理", "受動喫煙の防止", "廃棄物の処理", "労働時間の管理"],
+            answer: 1,
+            explanation: "健康増進法では受動喫煙の防止が規定されており、2020年4月から多数の者が利用する施設での原則屋内禁煙が義務化された。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "WHO（世界保健機関）の健康の定義に含まれないものはどれか。",
+            choices: ["身体的健康", "精神的健康", "経済的健康", "社会的健康"],
+            answer: 2,
+            explanation: "WHOの健康の定義は「身体的・精神的・社会的に完全に良好な状態であり、単に疾病がないことではない」とされ、経済的健康は含まれない。"
+        },
+        {
+            category: "公衆衛生学",
+            question: "下水道に関する記述で正しいものはどれか。",
+            choices: ["下水道の普及は感染症予防に寄与しない", "活性汚泥法は下水の生物学的処理法である", "下水処理水は消毒せずに放流できる", "合流式下水道では雨水と汚水を別々に処理する"],
+            answer: 1,
+            explanation: "活性汚泥法は微生物を利用して下水中の有機物を分解する生物学的処理法で、日本の下水処理場で広く採用されている。"
+        },
+
+        // ===== 栄養学 (15%) =====
+        {
+            category: "栄養学",
+            question: "三大栄養素のエネルギー産生量で正しいものはどれか。",
+            choices: ["たんぱく質 1gあたり9kcal", "脂質 1gあたり4kcal", "炭水化物 1gあたり4kcal", "脂質 1gあたり7kcal"],
+            answer: 2,
+            explanation: "三大栄養素のエネルギー産生量は、たんぱく質4kcal/g、脂質9kcal/g、炭水化物4kcal/g（アトウォーター係数）。"
+        },
+        {
+            category: "栄養学",
+            question: "ビタミンCに関する記述で正しいものはどれか。",
+            choices: ["脂溶性ビタミンである", "コラーゲンの合成に関与する", "体内に蓄積されやすい", "加熱に対して安定である"],
+            answer: 1,
+            explanation: "ビタミンCは水溶性ビタミンで、コラーゲンの合成に不可欠。加熱や酸化に弱く、体内に蓄積されにくいため毎日の摂取が必要。"
+        },
+        {
+            category: "栄養学",
+            question: "必須アミノ酸に該当しないものはどれか。",
+            choices: ["リジン", "バリン", "グルタミン酸", "トリプトファン"],
+            answer: 2,
+            explanation: "グルタミン酸は体内で合成できる非必須アミノ酸。成人の必須アミノ酸は9種類（バリン、ロイシン、イソロイシン、リジン、メチオニン、フェニルアラニン、スレオニン、トリプトファン、ヒスチジン）。"
+        },
+        {
+            category: "栄養学",
+            question: "カルシウムの吸収を促進するものはどれか。",
+            choices: ["食物繊維", "ビタミンD", "フィチン酸", "シュウ酸"],
+            answer: 1,
+            explanation: "ビタミンDは小腸でのカルシウム吸収を促進する。フィチン酸やシュウ酸はカルシウムと結合して吸収を阻害する。"
+        },
+        {
+            category: "栄養学",
+            question: "食物繊維に関する記述で正しいものはどれか。",
+            choices: ["エネルギー源として重要である", "消化酵素で消化されない", "動物性食品に多く含まれる", "水溶性食物繊維は便秘を悪化させる"],
+            answer: 1,
+            explanation: "食物繊維はヒトの消化酵素では消化されない成分で、整腸作用や血糖値上昇抑制などの効果がある。植物性食品に多く含まれる。"
+        },
+        {
+            category: "栄養学",
+            question: "基礎代謝に関する記述で正しいものはどれか。",
+            choices: ["運動時のエネルギー消費量である", "体表面積に比例する", "年齢とともに増加する", "女性の方が男性より高い"],
+            answer: 1,
+            explanation: "基礎代謝量は体表面積に比例し、生命維持に最低限必要なエネルギー。加齢とともに減少し、一般に男性の方が女性より高い。"
+        },
+        {
+            category: "栄養学",
+            question: "鉄の吸収に関する記述で正しいものはどれか。",
+            choices: ["ヘム鉄より非ヘム鉄の方が吸収率が高い", "ビタミンCは非ヘム鉄の吸収を促進する", "タンニンは鉄の吸収を促進する", "動物性食品には非ヘム鉄が多い"],
+            answer: 1,
+            explanation: "ビタミンCは非ヘム鉄（植物性食品に多い三価鉄）を二価鉄に還元し、吸収を促進する。ヘム鉄（動物性）の方が非ヘム鉄より吸収率が高い。"
+        },
+        {
+            category: "栄養学",
+            question: "日本人の食事摂取基準に関する記述で正しいものはどれか。",
+            choices: ["5年ごとに改定される", "個人の食事指導には使用できない", "推定平均必要量は全員の必要量を満たす値である", "目標量はすべての栄養素に設定されている"],
+            answer: 0,
+            explanation: "日本人の食事摂取基準は厚生労働省が5年ごとに改定する。個人および集団の食事改善に活用される。推定平均必要量は50%の人の必要量を満たす値。"
+        },
+        {
+            category: "栄養学",
+            question: "脂溶性ビタミンに該当しないものはどれか。",
+            choices: ["ビタミンA", "ビタミンB₁", "ビタミンD", "ビタミンE"],
+            answer: 1,
+            explanation: "ビタミンB₁は水溶性ビタミン。脂溶性ビタミンはA・D・E・Kの4種類で、油脂と一緒に摂取すると吸収率が高まる。"
+        },
+
+        // ===== 食品学 (10%) =====
+        {
+            category: "食品学",
+            question: "米の主成分として最も多いものはどれか。",
+            choices: ["たんぱく質", "脂質", "でんぷん", "食物繊維"],
+            answer: 2,
+            explanation: "米（精白米）の主成分はでんぷん（炭水化物）で、約77%を占める。たんぱく質は約6%、脂質は約1%程度。"
+        },
+        {
+            category: "食品学",
+            question: "大豆に関する記述で正しいものはどれか。",
+            choices: ["糖質が主成分である", "たんぱく質と脂質が豊富である", "ビタミンCが豊富である", "カルシウムはほとんど含まれない"],
+            answer: 1,
+            explanation: "大豆は「畑の肉」と呼ばれ、たんぱく質（約35%）と脂質（約19%）が豊富。イソフラボンやレシチンなどの機能性成分も含む。"
+        },
+        {
+            category: "食品学",
+            question: "鶏卵に関する記述で正しいものはどれか。",
+            choices: ["卵白は脂質を多く含む", "卵黄にはレシチンが含まれる", "鮮度が低下すると卵白のpHが低下する", "卵殻は無機質をほとんど含まない"],
+            answer: 1,
+            explanation: "卵黄にはレシチン（リン脂質）が含まれ、乳化作用がある。マヨネーズの乳化剤として利用される。鮮度低下で卵白のpHは上昇する。"
+        },
+        {
+            category: "食品学",
+            question: "牛乳の殺菌方法で「超高温瞬間殺菌（UHT）」の条件として正しいものはどれか。",
+            choices: ["63℃で30分間", "72℃で15秒間", "120～150℃で1～3秒間", "100℃で10分間"],
+            answer: 2,
+            explanation: "UHT殺菌は120～150℃で1～3秒間の処理。日本で流通する牛乳の大部分はこの方法。63℃30分はLTLT（低温長時間）殺菌。"
+        },
+        {
+            category: "食品学",
+            question: "食品の褐変反応に関する記述で正しいものはどれか。",
+            choices: ["メイラード反応はアミノ酸と糖の反応である", "カラメル化にはアミノ酸が必要である", "酵素的褐変は加熱により促進される", "メイラード反応は低温ほど進行しやすい"],
+            answer: 0,
+            explanation: "メイラード反応（アミノカルボニル反応）はアミノ酸と還元糖が反応して褐色物質を生成する非酵素的褐変。加熱により促進される。"
+        },
+        {
+            category: "食品学",
+            question: "食用油脂に関する記述で正しいものはどれか。",
+            choices: ["不飽和脂肪酸は酸化されにくい", "バターは植物性油脂である", "酸価は油脂の劣化指標である", "トランス脂肪酸は天然には存在しない"],
+            answer: 2,
+            explanation: "酸価は油脂中の遊離脂肪酸の量を示し、油脂の劣化（加水分解）の指標となる。過酸化物価とともに油脂の品質管理に用いられる。"
+        },
+
+        // ===== 調理理論 (25%) =====
+        {
+            category: "調理理論",
+            question: "でんぷんの糊化（α化）に関する記述で正しいものはどれか。",
+            choices: ["冷水を加えると起こる", "加熱と水分により起こる", "乾燥により促進される", "消化されにくくなる"],
+            answer: 1,
+            explanation: "でんぷんの糊化（α化）は水と加熱により起こり、でんぷん粒が膨潤して粘性が生じる現象。糊化したでんぷんは消化されやすくなる。"
+        },
+        {
+            category: "調理理論",
+            question: "肉の軟化に関する記述で正しいものはどれか。",
+            choices: ["酢に漬けると硬くなる", "パイナップルのプロテアーゼが肉を軟化させる", "長時間加熱するとコラーゲンは硬くなる", "塩漬けは肉を軟化させる"],
+            answer: 1,
+            explanation: "パイナップルやキウイに含まれるプロテアーゼ（たんぱく質分解酵素）は肉のたんぱく質を分解して軟化させる。コラーゲンは長時間加熱でゼラチン化し軟化する。"
+        },
+        {
+            category: "調理理論",
+            question: "天ぷらの揚げ方に関する記述で正しいものはどれか。",
+            choices: ["衣の材料はよく混ぜるとよい", "冷水を使い、混ぜすぎないようにする", "高い温度の水を使うとカラッと揚がる", "小麦粉は強力粉が適している"],
+            answer: 1,
+            explanation: "天ぷらの衣は冷水を使い、混ぜすぎないことでグルテンの形成を抑え、サクッとした食感になる。薄力粉を使用するのも同じ理由。"
+        },
+        {
+            category: "調理理論",
+            question: "砂糖の調理性に関する記述で正しいものはどれか。",
+            choices: ["たんぱく質の熱凝固を促進する", "でんぷんの老化を促進する", "果物のペクチンと酸によりゲル化を助ける", "防腐作用はない"],
+            answer: 2,
+            explanation: "砂糖は果物のペクチンと酸の存在下でジャムのゲル化を助ける。また、でんぱくの老化を抑制し、たんぱく質の熱凝固温度を上昇させる作用もある。"
+        },
+        {
+            category: "調理理論",
+            question: "だし汁に関する記述で正しいものはどれか。",
+            choices: ["かつお節のうま味成分はグルタミン酸である", "昆布のうま味成分はイノシン酸である", "かつお節と昆布の併用でうま味の相乗効果が得られる", "だし汁は沸騰させ続けると風味が増す"],
+            answer: 2,
+            explanation: "かつお節のイノシン酸と昆布のグルタミン酸を合わせることで、うま味の相乗効果が得られ、単独より強いうま味を感じる。"
+        },
+        {
+            category: "調理理論",
+            question: "卵の調理に関する記述で正しいものはどれか。",
+            choices: ["卵白は卵黄より低い温度で凝固する", "温泉卵は卵白が完全凝固し卵黄が半熟の状態である", "卵黄の凝固温度は約65～70℃である", "砂糖を加えると凝固温度が低下する"],
+            answer: 2,
+            explanation: "卵黄の凝固温度は約65～70℃、卵白は約60℃から凝固が始まり80℃で完全凝固。温泉卵は卵黄が半凝固、卵白が半流動の状態。"
+        },
+        {
+            category: "調理理論",
+            question: "野菜の調理に関する記述で正しいものはどれか。",
+            choices: ["緑色野菜は蓋をして茹でると色が鮮やかになる", "根菜類は沸騰水から茹でる", "ほうれん草はたっぷりの湯で手早く茹でる", "酢を加えると緑色が鮮やかになる"],
+            answer: 2,
+            explanation: "ほうれん草などの緑色野菜はたっぷりの湯で短時間に茹でることでクロロフィルの変色を防ぎ、シュウ酸も除去できる。蓋を開けて茹でるのがポイント。"
+        },
+        {
+            category: "調理理論",
+            question: "ゼラチンに関する記述で正しいものはどれか。",
+            choices: ["植物性たんぱく質から作られる", "60℃以上で固まる", "パイナップルの生果汁を加えても固まる", "コラーゲンを加熱して得られる"],
+            answer: 3,
+            explanation: "ゼラチンは動物のコラーゲンを加熱抽出して得られるたんぱく質。パイナップルやキウイの生果汁に含まれるプロテアーゼにより分解され固まらない。"
+        },
+        {
+            category: "調理理論",
+            question: "小麦粉の種類と用途の組み合わせで正しいものはどれか。",
+            choices: ["強力粉 ー 天ぷらの衣", "薄力粉 ー パン", "強力粉 ー パン", "中力粉 ー ケーキ"],
+            answer: 2,
+            explanation: "強力粉はグルテン含量が多くパン作りに適する。薄力粉はグルテンが少なくケーキ・天ぷらに、中力粉はうどん等に適している。"
+        },
+        {
+            category: "調理理論",
+            question: "加熱調理に関する記述で正しいものはどれか。",
+            choices: ["蒸す調理は100℃以上になることはない", "電子レンジは食品中の水分子を振動させて加熱する", "揚げ物の温度は通常200℃以上である", "焼き物は対流伝熱のみで加熱される"],
+            answer: 1,
+            explanation: "電子レンジはマイクロ波により食品中の水分子を振動させ、摩擦熱により加熱する。内部から加熱されるのが特徴。"
+        },
+        {
+            category: "調理理論",
+            question: "乳化に関する記述で正しいものはどれか。",
+            choices: ["マヨネーズは水中油滴型の乳化食品である", "バターは水中油滴型の乳化食品である", "乳化剤は油と水の分離を促進する", "牛乳は油中水滴型の乳化食品である"],
+            answer: 0,
+            explanation: "マヨネーズは卵黄のレシチンを乳化剤として、酢（水相）の中に油が分散した水中油滴型（O/W型）の乳化食品。バターは油中水滴型（W/O型）。"
+        },
+        {
+            category: "調理理論",
+            question: "味の相互作用に関する記述で正しいものはどれか。",
+            choices: ["スイカに塩をかけると甘味が弱まる", "だし汁のうま味の相乗効果は対比効果である", "少量の塩は甘味を強める対比効果がある", "コーヒーに砂糖を加えると苦味の抑制効果はない"],
+            answer: 2,
+            explanation: "対比効果とは、主となる味に少量の別の味を加えることで主の味が強まる現象。スイカに塩で甘味が増す、おしるこに塩で甘味が引き立つなど。"
+        },
+        {
+            category: "調理理論",
+            question: "食品の冷凍に関する記述で正しいものはどれか。",
+            choices: ["緩慢冷凍の方が品質が良い", "急速冷凍は氷結晶が小さく品質が良い", "解凍は高温で急速に行うのが最適である", "冷凍食品は栄養価がすべて失われる"],
+            answer: 1,
+            explanation: "急速冷凍は食品内の氷結晶が小さく均一になるため、細胞の破壊が少なく品質が保持される。緩慢冷凍は大きな氷結晶ができ品質が低下する。"
+        },
+        {
+            category: "調理理論",
+            question: "寒天とゼラチンの比較で正しいものはどれか。",
+            choices: ["寒天は動物性、ゼラチンは植物性である", "ゼラチンは寒天より高い温度で固まる", "寒天のゲルは弾力が強い", "寒天は常温で固まり、ゼラチンは冷蔵が必要である"],
+            answer: 3,
+            explanation: "寒天は40℃以下で固まるため常温で凝固するが、ゼラチンは20℃以下で固まるため冷蔵が必要。寒天は海藻由来、ゼラチンは動物由来。"
+        },
+        {
+            category: "調理理論",
+            question: "塩の調理効果として正しいものはどれか。",
+            choices: ["グルテンの形成を抑制する", "野菜の浸透圧により脱水作用がある", "魚の身を柔らかくする", "たんぱく質の凝固を抑制する"],
+            answer: 1,
+            explanation: "塩は浸透圧の作用で野菜の細胞から水分を引き出す（脱水作用）。漬物や塩もみはこの作用を利用している。また、魚の身を締める効果もある。"
+        },
+
+        // ===== 食文化概論 (10%) =====
+        {
+            category: "食文化概論",
+            question: "日本料理の形式で「一汁三菜」の「三菜」に含まれないものはどれか。",
+            choices: ["向付（むこうづけ）", "煮物", "飯", "焼き物"],
+            answer: 2,
+            explanation: "一汁三菜の三菜は「向付（刺身等）」「煮物」「焼き物」の三品。飯と汁は別に数える。日本料理の基本的な献立構成。"
+        },
+        {
+            category: "食文化概論",
+            question: "西洋料理のコース構成で、通常最初に提供されるものはどれか。",
+            choices: ["スープ", "前菜（オードブル）", "魚料理", "肉料理"],
+            answer: 1,
+            explanation: "西洋料理のフルコースは前菜（オードブル）→スープ→魚料理→肉料理→サラダ→デザートの順で提供される。"
+        },
+        {
+            category: "食文化概論",
+            question: "中国料理の四大料理に含まれないものはどれか。",
+            choices: ["北京料理", "四川料理", "上海料理", "台湾料理"],
+            answer: 3,
+            explanation: "中国の四大料理は北京料理、上海料理、四川料理、広東料理。それぞれ地域の気候・風土を反映した特色がある。"
+        },
+        {
+            category: "食文化概論",
+            question: "日本の行事食の組み合わせで正しいものはどれか。",
+            choices: ["正月 ー ちまき", "端午の節句 ー 柏餅", "七夕 ー おはぎ", "土用の丑の日 ー そば"],
+            answer: 1,
+            explanation: "端午の節句（5月5日）には柏餅やちまきを食べる習慣がある。正月はおせち料理・雑煮、土用の丑の日はうなぎが代表的。"
+        },
+        {
+            category: "食文化概論",
+            question: "日本料理の調味の基本「さしすせそ」の「せ」に該当するものはどれか。",
+            choices: ["セロリ", "醤油", "石灰", "ゼラチン"],
+            answer: 1,
+            explanation: "さしすせそは砂糖（さ）、塩（し）、酢（す）、醤油（せ）、味噌（そ）。この順序で調味すると味がよく浸透する。"
+        },
+        {
+            category: "食文化概論",
+            question: "郷土料理とその地域の組み合わせで正しいものはどれか。",
+            choices: ["きりたんぽ ー 山形県", "ほうとう ー 山梨県", "讃岐うどん ー 愛媛県", "もんじゃ焼き ー 大阪府"],
+            answer: 1,
+            explanation: "ほうとうは山梨県の郷土料理で、幅広の麺を野菜と味噌で煮込む。きりたんぽは秋田県、讃岐うどんは香川県、もんじゃ焼きは東京都の名物。"
+        }
+    ];
+
+    // ==========================================
+    // アプリケーション状態管理
+    // ==========================================
+    let currentMode = null;
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let categoryResults = {};
+    let answered = false;
+
+    // カテゴリ別出題配分（模擬試験モード: 60問）
+    const EXAM_DISTRIBUTION = {
+        "食品衛生学": 15,
+        "公衆衛生学": 9,
+        "栄養学": 9,
+        "食品学": 6,
+        "調理理論": 15,
+        "食文化概論": 6
+    };
+
+    // ==========================================
+    // LocalStorage管理
+    // ==========================================
+    function getStats() {
+        const stats = localStorage.getItem('chorishi_stats');
+        return stats ? JSON.parse(stats) : { total: 0, correct: 0, exams: 0 };
+    }
+
+    function saveStats(stats) {
+        localStorage.setItem('chorishi_stats', JSON.stringify(stats));
+    }
+
+    function getWeakQuestions() {
+        const weak = localStorage.getItem('chorishi_weak');
+        return weak ? JSON.parse(weak) : [];
+    }
+
+    function saveWeakQuestions(weak) {
+        localStorage.setItem('chorishi_weak', JSON.stringify(weak));
+    }
+
+    function addWeakQuestion(questionIndex) {
+        let weak = getWeakQuestions();
+        if (!weak.includes(questionIndex)) {
+            weak.push(questionIndex);
+            saveWeakQuestions(weak);
+        }
+    }
+
+    function removeWeakQuestion(questionIndex) {
+        let weak = getWeakQuestions();
+        weak = weak.filter(i => i !== questionIndex);
+        saveWeakQuestions(weak);
+    }
+
+    function resetStats() {
+        if (confirm('学習記録をすべてリセットしますか？')) {
+            localStorage.removeItem('chorishi_stats');
+            localStorage.removeItem('chorishi_weak');
+            updateStatsDisplay();
+            updateWeakCount();
+        }
+    }
+
+    // ==========================================
+    // 表示更新
+    // ==========================================
+    function updateStatsDisplay() {
+        const stats = getStats();
+        document.getElementById('stat-total').textContent = stats.total;
+        document.getElementById('stat-rate').textContent = stats.total > 0
+            ? Math.round(stats.correct / stats.total * 100) + '%'
+            : '-%';
+        document.getElementById('stat-exams').textContent = stats.exams;
+    }
+
+    function updateWeakCount() {
+        const weak = getWeakQuestions();
+        document.getElementById('weak-count').textContent = weak.length;
+    }
+
+    // ==========================================
+    // モード開始
+    // ==========================================
+    function startExamMode() {
+        currentMode = 'exam';
+        currentQuestions = [];
+        categoryResults = {};
+
+        // カテゴリ配分に従って問題を選択
+        for (const [category, count] of Object.entries(EXAM_DISTRIBUTION)) {
+            const categoryQuestions = questions
+                .map((q, i) => ({ ...q, originalIndex: i }))
+                .filter(q => q.category === category);
+            const shuffled = shuffle([...categoryQuestions]);
+            const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+            currentQuestions.push(...selected);
+            categoryResults[category] = { total: selected.length, correct: 0 };
+        }
+
+        // 全体をシャッフル
+        currentQuestions = shuffle(currentQuestions);
+        currentIndex = 0;
+        correctCount = 0;
+        showQuizScreen();
+    }
+
+    function showRandomModal() {
+        document.getElementById('random-modal').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('random-modal').classList.remove('show');
+    }
+
+    function startRandomMode(count) {
+        closeModal();
+        currentMode = 'random';
+        categoryResults = {};
+
+        let allQuestions = questions.map((q, i) => ({ ...q, originalIndex: i }));
+        allQuestions = shuffle(allQuestions);
+
+        if (count > 0) {
+            currentQuestions = allQuestions.slice(0, count);
+        } else {
+            currentQuestions = allQuestions;
+        }
+
+        // カテゴリ結果を初期化
+        currentQuestions.forEach(q => {
+            if (!categoryResults[q.category]) {
+                categoryResults[q.category] = { total: 0, correct: 0 };
+            }
+            categoryResults[q.category].total++;
+        });
+
+        currentIndex = 0;
+        correctCount = 0;
+        showQuizScreen();
+    }
+
+    function startWeakMode() {
+        const weakIndices = getWeakQuestions();
+        if (weakIndices.length === 0) {
+            alert('苦手な問題はまだありません。\n問題を解いて間違えた問題が記録されます。');
+            return;
+        }
+
+        currentMode = 'weak';
+        categoryResults = {};
+        currentQuestions = shuffle(weakIndices.map(i => ({ ...questions[i], originalIndex: i })));
+
+        currentQuestions.forEach(q => {
+            if (!categoryResults[q.category]) {
+                categoryResults[q.category] = { total: 0, correct: 0 };
+            }
+            categoryResults[q.category].total++;
+        });
+
+        currentIndex = 0;
+        correctCount = 0;
+        showQuizScreen();
+    }
+
+    // ==========================================
+    // 問題表示
+    // ==========================================
+    function showQuizScreen() {
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('result-screen').style.display = 'none';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        answered = false;
+        const q = currentQuestions[currentIndex];
+
+        document.getElementById('progress-info').textContent =
+            `${currentIndex + 1} / ${currentQuestions.length}`;
+        document.getElementById('category-badge').textContent = q.category;
+        document.getElementById('question-text').textContent = q.question;
+        document.getElementById('explanation').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        const choicesEl = document.getElementById('choices');
+        choicesEl.innerHTML = '';
+
+        q.choices.forEach((choice, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = `${i + 1}. ${choice}`;
+            btn.onclick = () => selectAnswer(i);
+            choicesEl.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(selectedIndex) {
+        if (answered) return;
+        answered = true;
+
+        const q = currentQuestions[currentIndex];
+        const isCorrect = selectedIndex === q.answer;
+        const buttons = document.querySelectorAll('.choice-btn');
+
+        // 統計更新
+        const stats = getStats();
+        stats.total++;
+        if (isCorrect) {
+            stats.correct++;
+            correctCount++;
+            categoryResults[q.category].correct++;
+            // 苦手リストから削除（正解した場合）
+            if (currentMode === 'weak') {
+                removeWeakQuestion(q.originalIndex);
+            }
+        } else {
+            // 苦手リストに追加
+            addWeakQuestion(q.originalIndex);
+        }
+        saveStats(stats);
+
+        // ボタンの色を変更
+        buttons.forEach((btn, i) => {
+            btn.disabled = true;
+            if (i === q.answer) {
+                btn.classList.add('correct');
+            } else if (i === selectedIndex && !isCorrect) {
+                btn.classList.add('incorrect');
+            }
+            if (i === q.answer && !isCorrect) {
+                btn.classList.add('show-correct');
+            }
+        });
+
+        // 解説表示
+        document.getElementById('explanation').style.display = 'block';
+        document.getElementById('explanation-text').textContent = q.explanation;
+
+        // 次へボタン表示
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.style.display = 'block';
+        nextBtn.textContent = currentIndex < currentQuestions.length - 1 ? '次の問題' : '結果を見る';
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < currentQuestions.length) {
+            showQuestion();
+            // スクロールを上に戻す
+            window.scrollTo(0, 0);
+        } else {
+            showResult();
+        }
+    }
+
+    // ==========================================
+    // 結果表示
+    // ==========================================
+    function showResult() {
+        // 模擬試験の場合は回数をカウント
+        if (currentMode === 'exam') {
+            const stats = getStats();
+            stats.exams++;
+            saveStats(stats);
+        }
+
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+
+        const total = currentQuestions.length;
+        const rate = Math.round(correctCount / total * 100);
+
+        document.getElementById('result-score').innerHTML = `${correctCount}<span> / ${total}</span>`;
+        document.getElementById('result-detail').textContent = `正解率: ${rate}%`;
+
+        const passEl = document.getElementById('result-pass');
+        if (rate >= 60) {
+            passEl.textContent = '🎉 合格ライン達成！';
+            passEl.className = 'result-pass pass';
+        } else {
+            passEl.textContent = '📚 もう少し頑張りましょう';
+            passEl.className = 'result-pass fail';
+        }
+
+        // カテゴリ別結果
+        const categoryResultsEl = document.getElementById('category-results');
+        categoryResultsEl.innerHTML = '';
+
+        for (const [category, result] of Object.entries(categoryResults)) {
+            const catRate = result.total > 0 ? Math.round(result.correct / result.total * 100) : 0;
+            const color = catRate >= 60 ? '#4caf50' : '#ff5252';
+
+            categoryResultsEl.innerHTML += `
+                <div class="category-result-item">
+                    <span>${category}</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span>${result.correct}/${result.total}</span>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" style="width:${catRate}%;background:${color};"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        updateStatsDisplay();
+        updateWeakCount();
+    }
+
+    // ==========================================
+    // ナビゲーション
+    // ==========================================
+    function goHome() {
+        document.getElementById('home-screen').style.display = 'block';
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'none';
+        updateStatsDisplay();
+        updateWeakCount();
+        window.scrollTo(0, 0);
+    }
+
+    function retryMode() {
+        if (currentMode === 'exam') {
+            startExamMode();
+        } else if (currentMode === 'random') {
+            startRandomMode(currentQuestions.length);
+        } else if (currentMode === 'weak') {
+            startWeakMode();
+        }
+    }
+
+    // ==========================================
+    // ユーティリティ
+    // ==========================================
+    function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // 初期化
+    updateStatsDisplay();
+    updateWeakCount();
+    </script>
+</body>
+</html>
