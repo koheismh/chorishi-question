@@ -1,0 +1,20 @@
+{
+  "appId": "chorishi",
+  "title": "調理師試験 模擬問題",
+  "subtitle": "合格に向けて頑張りましょう！",
+  "passRate": 60,
+  "examQuestionCount": 60,
+  "examDistribution": {
+    "食品衛生学": 15,
+    "公衆衛生学": 9,
+    "栄養学": 9,
+    "食品学": 6,
+    "調理理論": 15,
+    "食文化概論": 6
+  },
+  "theme": {
+    "gradientFrom": "#667eea",
+    "gradientTo": "#764ba2",
+    "shadow": "rgba(102, 126, 234, 0.3)"
+  }
+}

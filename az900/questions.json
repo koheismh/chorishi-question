@@ -1,0 +1,227 @@
+[
+  {
+    "id": 1,
+    "category": "クラウドの概念",
+    "basic": {
+      "question": "クラウドコンピューティングの利点として正しいものはどれか。",
+      "choices": ["初期投資が大きい", "スケーラビリティが高い", "物理サーバーの管理が必要", "容量の変更ができない"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "クラウドコンピューティングの特徴として、正しくないものはどれか。",
+      "choices": ["必要に応じてリソースを増減できる", "使用した分だけ課金される", "物理的なデータセンターの管理は利用者が行う", "高可用性を実現できる"],
+      "answer": 2
+    },
+    "explanation": "クラウドコンピューティングでは物理的なデータセンターの管理はクラウドプロバイダーが行う。利用者はインフラの物理管理から解放され、スケーラビリティや従量課金のメリットを享受できる。"
+  },
+  {
+    "id": 2,
+    "category": "クラウドの概念",
+    "basic": {
+      "question": "IaaS（Infrastructure as a Service）で利用者が管理する範囲はどれか。",
+      "choices": ["物理サーバー", "OS・ミドルウェア・アプリケーション", "データセンターの電源", "ネットワークケーブル"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "クラウドサービスモデルの責任範囲に関する記述として、正しいものはどれか。",
+      "choices": ["SaaSでは利用者がOSの管理を行う", "PaaSでは利用者がアプリケーションの管理を行う", "IaaSではクラウドプロバイダーがアプリケーションを管理する", "すべてのモデルでネットワーク機器は利用者が管理する"],
+      "answer": 1
+    },
+    "explanation": "PaaSでは利用者はアプリケーションとデータの管理を行い、OS・ミドルウェア・ランタイムはプロバイダーが管理する。IaaSではOS以上を利用者が管理し、SaaSではほぼすべてをプロバイダーが管理する。"
+  },
+  {
+    "id": 3,
+    "category": "クラウドの概念",
+    "basic": {
+      "question": "パブリッククラウドの特徴はどれか。",
+      "choices": ["自社専用のデータセンターを持つ", "不特定多数の利用者がリソースを共有する", "インターネット接続が不要", "初期費用が非常に高い"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "ハイブリッドクラウドに関する記述として、正しいものはどれか。",
+      "choices": ["パブリッククラウドのみを使用する形態である", "オンプレミスとパブリッククラウドを組み合わせた形態である", "プライベートクラウドのみを使用する形態である", "クラウドを一切使用しない形態である"],
+      "answer": 1
+    },
+    "explanation": "ハイブリッドクラウドはオンプレミス（またはプライベートクラウド）とパブリッククラウドを組み合わせた形態。それぞれの利点を活かし、データの配置やワークロードの柔軟な運用が可能。"
+  },
+  {
+    "id": 4,
+    "category": "クラウドの概念",
+    "basic": {
+      "question": "CapEx（資本的支出）に該当するものはどれか。",
+      "choices": ["月額のクラウド利用料", "物理サーバーの購入費", "従量課金のストレージ料金", "サブスクリプション費用"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "クラウドの経済性に関する記述として、正しいものはどれか。",
+      "choices": ["クラウドはCapExモデルである", "クラウドはOpEx（運用費）モデルで従量課金が基本である", "オンプレミスはOpExモデルである", "クラウドでは初期投資が必須である"],
+      "answer": 1
+    },
+    "explanation": "クラウドはOpEx（運用費）モデルで、使った分だけ支払う従量課金が基本。オンプレミスはCapEx（資本的支出）モデルで、ハードウェアの事前購入が必要。"
+  },
+  {
+    "id": 5,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "Azure Virtual Machinesが該当するサービスモデルはどれか。",
+      "choices": ["SaaS", "PaaS", "IaaS", "FaaS"],
+      "answer": 2
+    },
+    "exam": {
+      "question": "Azure App Serviceに関する記述として、正しいものはどれか。",
+      "choices": ["IaaSサービスであり、OSの管理が必要である", "PaaSサービスであり、Webアプリのホスティングに適している", "仮想マシンを直接操作するサービスである", "ストレージ専用のサービスである"],
+      "answer": 1
+    },
+    "explanation": "Azure App ServiceはPaaSサービスで、Webアプリ、REST API、モバイルバックエンドをホストできる。OSやインフラの管理はAzureが行い、開発者はアプリケーションに集中できる。"
+  },
+  {
+    "id": 6,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "Azureでデータを保存するためのサービスはどれか。",
+      "choices": ["Azure Functions", "Azure Storage", "Azure AD", "Azure Monitor"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azure Blob Storageに関する記述として、正しくないものはどれか。",
+      "choices": ["非構造化データの保存に適している", "ホット・クール・アーカイブのアクセス層がある", "リレーショナルデータベースサービスである", "大容量のファイルや画像の保存に使用できる"],
+      "answer": 2
+    },
+    "explanation": "Azure Blob Storageは非構造化データ（画像、動画、ログ等）を保存するオブジェクトストレージ。リレーショナルデータベースではない。アクセス頻度に応じてホット/クール/アーカイブ層を選択できる。"
+  },
+  {
+    "id": 7,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "Azureのリージョンとは何か。",
+      "choices": ["課金単位", "データセンターが配置された地理的な場所", "ユーザーアカウントの種類", "ネットワークの速度"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azureの可用性ゾーン（Availability Zone）に関する記述として、正しいものはどれか。",
+      "choices": ["同一リージョン内の物理的に分離されたデータセンターである", "異なるリージョン間の接続のことである", "すべてのリージョンに必ず存在する", "仮想マシンの種類のことである"],
+      "answer": 0
+    },
+    "explanation": "可用性ゾーンは同一リージョン内の物理的に分離された独立のデータセンター群。電源・冷却・ネットワークが独立しており、1つのゾーンに障害が起きても他のゾーンで継続できる。"
+  },
+  {
+    "id": 8,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "Azure Virtual Networkの役割はどれか。",
+      "choices": ["データの暗号化", "Azure内のリソース間の通信を可能にする", "課金管理", "ユーザー認証"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azure上のネットワークに関する記述として、正しいものの組合せはどれか。\n\nA. VNet（仮想ネットワーク）でリソース間の通信を制御できる\nB. NSG（ネットワークセキュリティグループ）でトラフィックをフィルタリングできる\nC. VNetは課金管理のためだけに使用する\nD. Azure Firewallはストレージサービスである",
+      "choices": ["AとB", "AとC", "BとD", "CとD"],
+      "answer": 0
+    },
+    "explanation": "Azure Virtual Network（VNet）はAzureリソース間のプライベートネットワークを構築する。NSGはサブネットやNICにアタッチしてインバウンド/アウトバウンドのトラフィックをフィルタリングする。"
+  },
+  {
+    "id": 9,
+    "category": "Azureの管理とガバナンス",
+    "basic": {
+      "question": "Azure上のリソースのアクセス制御に使用されるサービスはどれか。",
+      "choices": ["Azure Blob Storage", "Azure RBAC（ロールベースアクセス制御）", "Azure Functions", "Azure CDN"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azure RBACに関する記述として、正しいものはどれか。",
+      "choices": ["リソースへのアクセスを暗号化するサービスである", "ユーザーやグループに対して最小権限のアクセスを付与できる", "ネットワークの速度を制御するサービスである", "仮想マシンのサイズを変更するサービスである"],
+      "answer": 1
+    },
+    "explanation": "Azure RBAC（Role-Based Access Control）はリソースへのアクセスを役割ベースで管理する仕組み。最小権限の原則に基づき、必要な権限のみをユーザーやグループに付与できる。"
+  },
+  {
+    "id": 10,
+    "category": "Azureの管理とガバナンス",
+    "basic": {
+      "question": "Azureのコスト管理に使用できるツールはどれか。",
+      "choices": ["Azure DevOps", "Azure Cost Management", "Azure AD", "Azure Sentinel"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azureのコスト最適化に関する記述として、正しくないものはどれか。",
+      "choices": ["Azure Cost Managementでコストの分析と予算設定ができる", "予約インスタンスで長期利用のコストを削減できる", "リソースにタグを付けてコスト配分を管理できる", "Azureのすべてのサービスは無料で利用できる"],
+      "answer": 3
+    },
+    "explanation": "Azureのサービスは従量課金が基本であり無料ではない。Azure Cost Managementでコスト分析・予算アラートを設定でき、予約インスタンスやタグによるコスト管理が有効。"
+  },
+  {
+    "id": 11,
+    "category": "Azureの管理とガバナンス",
+    "basic": {
+      "question": "Azure Policyの目的はどれか。",
+      "choices": ["仮想マシンの作成", "組織のルールに準拠したリソース構成を強制する", "データベースのバックアップ", "アプリのデプロイ"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azureのガバナンスに関する記述として、正しいものはどれか。",
+      "choices": ["Azure Policyはリソースの作成ルールを強制できる", "Azure BlueprintsはVMのサイズを変更するサービスである", "管理グループはストレージの種類である", "Azure Policyはネットワーク速度を制御する"],
+      "answer": 0
+    },
+    "explanation": "Azure Policyは組織のコンプライアンス要件に従ったリソース構成を強制する。例えば特定のリージョンのみにリソース作成を許可する、特定のVMサイズを禁止するなどのルールを設定できる。"
+  },
+  {
+    "id": 12,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "サーバーレスコンピューティングに該当するAzureサービスはどれか。",
+      "choices": ["Azure Virtual Machines", "Azure Functions", "Azure Disk Storage", "Azure ExpressRoute"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azure Functionsに関する記述として、正しいものはどれか。",
+      "choices": ["常時稼働する仮想マシンが必要である", "イベント駆動型で実行時間に対してのみ課金される", "リレーショナルデータベースサービスである", "OSの管理が利用者に必要である"],
+      "answer": 1
+    },
+    "explanation": "Azure Functionsはサーバーレスのコンピューティングサービスで、イベント（HTTPリクエスト、タイマー等）をトリガーにコードが実行される。実行時間と回数に対してのみ課金され、インフラ管理は不要。"
+  },
+  {
+    "id": 13,
+    "category": "Azureのアーキテクチャとサービス",
+    "basic": {
+      "question": "Azure SQL Databaseが該当するサービスモデルはどれか。",
+      "choices": ["IaaS", "PaaS", "SaaS", "オンプレミス"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azureのデータベースサービスに関する記述として、正しくないものはどれか。",
+      "choices": ["Azure SQL DatabaseはPaaSのリレーショナルデータベースである", "Azure Cosmos DBはグローバル分散型のNoSQLデータベースである", "Azure SQL Databaseでは利用者がOSパッチを管理する必要がある", "Azure Database for MySQLはマネージドサービスである"],
+      "answer": 2
+    },
+    "explanation": "Azure SQL DatabaseはPaaSのため、OSパッチやバックアップはAzureが自動管理する。利用者はデータベースの設計とデータ管理に集中できる。"
+  },
+  {
+    "id": 14,
+    "category": "クラウドの概念",
+    "basic": {
+      "question": "SLA（サービスレベルアグリーメント）とは何か。",
+      "choices": ["料金プラン", "サービスの稼働率や品質に関する保証", "プログラミング言語", "ネットワークの種類"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "AzureのSLAに関する記述として、正しいものはどれか。",
+      "choices": ["すべてのサービスのSLAは100%である", "SLAを満たさない場合はサービスクレジットが提供される", "SLAは利用者が自由に設定できる", "無料サービスにもSLAが保証される"],
+      "answer": 1
+    },
+    "explanation": "AzureのSLAはサービスごとに定められた稼働率の保証で、通常99.9%～99.99%。SLAを満たさない場合はサービスクレジット（返金）が提供される。無料サービスにはSLAは適用されない。"
+  },
+  {
+    "id": 15,
+    "category": "Azureの管理とガバナンス",
+    "basic": {
+      "question": "Azureリソースを管理するためのポータルはどれか。",
+      "choices": ["AWS Console", "Azure Portal", "Google Cloud Console", "IBM Cloud"],
+      "answer": 1
+    },
+    "exam": {
+      "question": "Azureの管理ツールに関する記述として、正しいものの組合せはどれか。\n\nA. Azure PortalはWebブラウザでリソースを管理できる\nB. Azure CLIはコマンドラインでリソースを管理できる\nC. Azure PowerShellはスクリプトによる自動化に使用できる\nD. Azure Portalでしかリソースを管理できない",
+      "choices": ["AとBとC", "AとD", "BとD", "CとD"],
+      "answer": 0
+    },
+    "explanation": "Azureリソースの管理にはAzure Portal（GUI）、Azure CLI、Azure PowerShell、ARM テンプレート、Azure Cloud Shell等の複数のツールが利用可能。用途に応じて使い分けられる。"
+  }
+]

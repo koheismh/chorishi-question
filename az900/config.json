@@ -1,0 +1,17 @@
+{
+  "appId": "az900",
+  "title": "AZ-900 模擬問題",
+  "subtitle": "Azure Fundamentals 合格を目指そう！",
+  "passRate": 70,
+  "examQuestionCount": 40,
+  "examDistribution": {
+    "クラウドの概念": 10,
+    "Azureのアーキテクチャとサービス": 18,
+    "Azureの管理とガバナンス": 12
+  },
+  "theme": {
+    "gradientFrom": "#0078d4",
+    "gradientTo": "#005a9e",
+    "shadow": "rgba(0, 120, 212, 0.3)"
+  }
+}
